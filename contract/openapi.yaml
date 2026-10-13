@@ -1,0 +1,129 @@
+# STARTER CONTRACT — replace "record/Record" nouns with your domain (accreditation, case, request…)
+# Owned by the merge captain. The running service must serve the same contract at /openapi.json.
+openapi: 3.0.3
+info:
+  title: "<Agency> <capability> service"
+  version: "0.1.0"
+  description: >
+    Synthetic-data build-day service. Auth: X-Client-Id + X-Api-Key on every call
+    (INTERNAL-APP=full scope, PARTNER-AGENCY=verify scope). Personal-data reads
+    require X-Purpose. Writes require Idempotency-Key; acting on a person's
+    behalf also requires X-Human-Confirmed: true. All errors return
+    {code, detail, action}. Every body carries synthetic: true.
+servers:
+  - url: http://localhost:8000
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      summary: Liveness check (no auth).
+      responses:
+        "200": {description: OK}
+  /records:
+    get:
+      operationId: listRecords
+      summary: List/search records. Full scope.
+      parameters:
+        - {name: q, in: query, schema: {type: string}, description: Case-insensitive search}
+        - {name: limit, in: query, schema: {type: integer, default: 20, maximum: 200}}
+      responses:
+        "200": {description: Matching records}
+        "401": {$ref: "#/components/responses/Unauthenticated"}
+        "403": {$ref: "#/components/responses/AccessDenied"}
+  /records/{id}:
+    get:
+      operationId: getRecord
+      summary: Full record. Full scope + X-Purpose required (personal data).
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: SBX-REG-0004}
+        - {name: X-Purpose, in: header, required: true, schema: {type: string}, example: Renewal case SBX-CASE-0012}
+      responses:
+        "200": {description: The record}
+        "400": {$ref: "#/components/responses/PurposeRequired"}
+        "401": {$ref: "#/components/responses/Unauthenticated"}
+        "403": {$ref: "#/components/responses/AccessDenied"}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /records/{id}/verify:
+    get:
+      operationId: verifyRecord
+      summary: Minimal-disclosure check — found/valid plus at most 3–4 fields. Any scope.
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: SBX-REG-0004}
+      responses:
+        "200":
+          description: Verification result (never contact details or free text)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  found: {type: boolean}
+                  name: {type: string}
+                  status: {type: string}
+                  validUntil: {type: string, format: date, nullable: true}
+                  synthetic: {type: boolean}
+        "401": {$ref: "#/components/responses/Unauthenticated"}
+  /requests:
+    post:
+      operationId: fileRequest
+      summary: "The safe write: file a <renewal/request> on someone's behalf. Idempotency-Key required; X-Human-Confirmed: true required."
+      parameters:
+        - {name: Idempotency-Key, in: header, required: true, schema: {type: string}}
+        - {name: X-Human-Confirmed, in: header, required: false, schema: {type: string, enum: ["true"]}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recordId, requestType]
+              properties:
+                recordId: {type: string, example: SBX-REG-0004}
+                requestType: {type: string, example: RENEWAL}
+                remarks: {type: string}
+      responses:
+        "201": {description: Filed; returns reference number and receipt}
+        "428": {description: "Not confirmed — body has {code: CONFIRMATION_REQUIRED, summary} for the UI confirm dialog"}
+        "401": {$ref: "#/components/responses/Unauthenticated"}
+        "403": {$ref: "#/components/responses/AccessDenied"}
+        "404": {$ref: "#/components/responses/NotFound"}
+  /access-log:
+    get:
+      operationId: getAccessLog
+      summary: Who asked what about a subject, when, and why. Full scope.
+      parameters:
+        - {name: subject, in: query, required: false, schema: {type: string}, example: SBX-REG-0004}
+        - {name: limit, in: query, schema: {type: integer, default: 50, maximum: 500}}
+      responses:
+        "200": {description: "Entries: ts, clientId, method, path, subjectId, purpose, status"}
+        "401": {$ref: "#/components/responses/Unauthenticated"}
+        "403": {$ref: "#/components/responses/AccessDenied"}
+components:
+  securitySchemes:
+    clientId: {type: apiKey, in: header, name: X-Client-Id}
+    apiKey: {type: apiKey, in: header, name: X-Api-Key}
+  schemas:
+    Error:
+      type: object
+      required: [code, detail, action]
+      properties:
+        code: {type: string, example: ACCESS_DENIED}
+        detail: {type: string}
+        action: {type: string, example: "request_access — call the verify endpoint instead, or ask the data owner."}
+        synthetic: {type: boolean}
+  responses:
+    Unauthenticated:
+      description: Missing or invalid X-Client-Id / X-Api-Key
+      content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}
+    AccessDenied:
+      description: Authenticated but out of scope (logged)
+      content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}
+    PurposeRequired:
+      description: Personal-data read without X-Purpose
+      content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}
+    NotFound:
+      description: No such record
+      content: {application/json: {schema: {$ref: "#/components/schemas/Error"}}}
+security:
+  - clientId: []
+    apiKey: []

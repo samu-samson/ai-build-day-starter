@@ -1,0 +1,21 @@
+registryNo,name,entityType,status,validUntil,region,contactPerson,contactEmail,remarks
+SBX-REG-0001,Sampaguita Transport Service Cooperative,Transport cooperative,ACTIVE,2027-06-30,NCR,Joshua Del Rosario,joshua.del.rosario@org.example,Synthetic record
+SBX-REG-0002,Bagong Umaga Urban Poor Association,People's organization,ACTIVE,2027-03-31,NCR,Cristina Soriano,cristina.soriano@org.example,Synthetic record
+SBX-REG-0003,Mabuhay Wood Products Testing Laboratory,Testing laboratory,ACTIVE,2026-12-31,Region IV-A,Jerome Pascual,jerome.pascual@org.example,Synthetic record
+SBX-REG-0004,Kalayaan Jeepney Operators Cooperative,Transport cooperative,PROVISIONAL,2026-11-30,Region III,Benjie Del Rosario,benjie.del.rosario@org.example,Synthetic record
+SBX-REG-0005,Hiraya Design Studio,Design firm,ACTIVE,2027-09-30,NCR,Paolo Javier,paolo.javier@org.example,Synthetic record
+SBX-REG-0006,Liwanag Metals Calibration Center,Calibration laboratory,SUSPENDED,2026-10-31,Region VII,Noel Domingo,noel.domingo@org.example,Synthetic record
+SBX-REG-0007,Bayanihan Fisherfolk Association,People's organization,EXPIRED,2026-06-30,Region V,Ana Javier,ana.javier@org.example,Synthetic record
+SBX-REG-0008,Dagat at Lupa Heritage Partners,Museum partner,ACTIVE,2027-12-31,Region VI,Ramon Reyes,ramon.reyes@org.example,Synthetic record
+SBX-REG-0009,Tanglaw Tricycle Operators Cooperative,Transport cooperative,ACTIVE,2027-01-31,Region X,Emmanuel Manalo,emmanuel.manalo@org.example,Synthetic record
+SBX-REG-0010,Sinag Postharvest Equipment Fabricators,Equipment fabricator,ACTIVE,2027-05-31,Region II,Paolo Tan,paolo.tan@org.example,Synthetic record
+SBX-REG-0011,Pag-asa Racing Stables,Racing stable,ACTIVE,2026-12-31,Region IV-A,Miguel Manalo,miguel.manalo@org.example,Synthetic record
+SBX-REG-0012,Habagat Coastal Development Corp.,Reclamation proponent,UNDER_REVIEW,,NCR,Rowena Ocampo,rowena.ocampo@org.example,Synthetic record
+SBX-REG-0013,Kapit-Bisig Neighborhood Association,People's organization,ACTIVE,2027-04-30,NCR,Lourdes Mercado,lourdes.mercado@org.example,Synthetic record
+SBX-REG-0014,Masagana Industrial Chemistry Laboratory,Testing laboratory,ACTIVE,2027-02-28,NCR,Camille Bautista,camille.bautista@org.example,Synthetic record
+SBX-REG-0015,Silangan UV Express Transport Cooperative,Transport cooperative,EXPIRED,2026-09-30,Region IV-A,Kevin Garcia,kevin.garcia@org.example,Synthetic record
+SBX-REG-0016,Ugnayan Overseas Family Circle,Community organization,ACTIVE,2027-08-31,Region I,Carlo Esguerra,carlo.esguerra@org.example,Synthetic record
+SBX-REG-0017,Alon Furniture Makers Guild,Design firm,ACTIVE,2027-03-31,Region VII,Teresa Del Rosario,teresa.del.rosario@org.example,Synthetic record
+SBX-REG-0018,Kabisig Probation Volunteers Group,Volunteer organization,ACTIVE,2027-06-30,Region XI,Marites Mendoza,marites.mendoza@org.example,Synthetic record
+SBX-REG-0019,Banaag Bamboo Testing Center,Testing laboratory,PROVISIONAL,2026-12-15,Region IV-A,Carlo Samonte,carlo.samonte@org.example,Synthetic record
+SBX-REG-0020,Bituin Horse Owners Association,Racing association,ACTIVE,2027-01-31,NCR,Benjie Pascual,benjie.pascual@org.example,Synthetic record

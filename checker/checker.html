@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Readiness checker</title>
+<style>
+  :root{--ok:#0f6e56;--okbg:#e1f5ee;--warn:#854f0b;--warnbg:#faeeda;--fail:#a32d2d;--failbg:#fcebeb;--ink:#1f1f1f;--mut:#6b6b6b;--line:#ddd;--acc:#3c3489}
+  *{box-sizing:border-box} body{font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);margin:0;background:#fafaf8}
+  header{padding:18px 22px;border-bottom:1px solid var(--line);background:#fff}
+  h1{font-size:19px;margin:0 0 2px;font-weight:600} .sub{color:var(--mut);font-size:13px}
+  main{max-width:1060px;margin:0 auto;padding:18px 22px 60px}
+  fieldset{border:1px solid var(--line);border-radius:8px;background:#fff;margin:0 0 14px;padding:12px 14px}
+  legend{font-size:12px;color:var(--mut);padding:0 6px;text-transform:uppercase;letter-spacing:.04em}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+  label{display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
+  input{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}
+  button{padding:9px 16px;border:1px solid var(--acc);border-radius:7px;background:var(--acc);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+  button.sec{background:#fff;color:var(--acc)} button:disabled{opacity:.5;cursor:default}
+  .score{font-size:17px;font-weight:700;margin-left:auto}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  th,td{padding:9px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top;font-size:13.5px}
+  th{background:#f4f3ef;border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
+  .PASS{background:var(--okbg);color:var(--ok)} .FAIL{background:var(--failbg);color:var(--fail)}
+  .WARN{background:var(--warnbg);color:var(--warn)} .SKIP{background:#eee;color:var(--mut)}
+  td .d{color:var(--mut);font-size:12.5px;margin-top:2px;word-break:break-word}
+  .foot{color:var(--mut);font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Readiness checker</h1>
+  <div class="sub">Scores a running service against the build-day rules (docs/CONVENTIONS.md). Runs entirely in your browser against localhost — your service needs dev CORS on. Synthetic data only.</div>
+</header>
+<main>
+  <fieldset><legend>Target</legend>
+    <div class="grid">
+      <div><label>Base URL</label><input id="base" value="http://localhost:8000"></div>
+      <div><label>Internal client ID</label><input id="icid" value="INTERNAL-APP"></div>
+      <div><label>Internal key</label><input id="ikey" value="int-dev-key"></div>
+      <div><label>Partner client ID</label><input id="pcid" value="PARTNER-AGENCY"></div>
+      <div><label>Partner key</label><input id="pkey" value="partner-dev-key"></div>
+    </div>
+  </fieldset>
+  <fieldset><legend>Paths (match your contract)</legend>
+    <div class="grid">
+      <div><label>Verify path (existing record)</label><input id="verify" value="/records/SBX-REG-0004/verify"></div>
+      <div><label>Detail path (same record, personal data)</label><input id="detail" value="/records/SBX-REG-0004"></div>
+      <div><label>Unknown-record detail path</label><input id="missing" value="/records/SBX-NOPE-9999"></div>
+      <div><label>Subject ID (for access log)</label><input id="subject" value="SBX-REG-0004"></div>
+      <div><label>Access log path</label><input id="log" value="/access-log"></div>
+      <div><label>Write path (blank to skip)</label><input id="wpath" value="/requests"></div>
+      <div style="grid-column:1/-1"><label>Write JSON body</label><input id="wbody" value='{"recordId":"SBX-REG-0004","requestType":"RENEWAL","remarks":"checker test"}'></div>
+    </div>
+  </fieldset>
+  <div class="row">
+    <button id="run">Run checks</button>
+    <button id="export" class="sec" disabled>Download results JSON</button>
+    <span class="score" id="score"></span>
+  </div>
+  <table id="tbl"><thead><tr><th style="width:34px">#</th><th style="width:230px">Check</th><th style="width:76px">Result</th><th>Detail</th></tr></thead><tbody></tbody></table>
+  <p class="foot">PASS = rule met · WARN = met with caveats · FAIL = not met · SKIP = not configured. Judges run this same page at 16:00; export the JSON into <code>tests/</code>.</p>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const F=["base","icid","ikey","pcid","pkey","verify","detail","missing","subject","log","wpath","wbody"];
+F.forEach(k=>{const v=localStorage.getItem("chk."+k); if(v!==null)$(k).value=v; $(k).addEventListener("input",()=>localStorage.setItem("chk."+k,$(k).value));});
+let results=[];
+function hdrs(kind,extra){const h={};if(kind==="internal"){h["X-Client-Id"]=$("icid").value;h["X-Api-Key"]=$("ikey").value;}if(kind==="partner"){h["X-Client-Id"]=$("pcid").value;h["X-Api-Key"]=$("pkey").value;}if(kind==="badkey"){h["X-Client-Id"]=$("icid").value;h["X-Api-Key"]="definitely-wrong-key";}return Object.assign(h,extra||{});}
+async function call(method,path,kind,extra,body){const url=$("base").value.replace(/\/$/,"")+path;const opt={method,headers:hdrs(kind,extra)};if(body!==undefined){opt.headers["Content-Type"]="application/json";opt.body=typeof body==="string"?body:JSON.stringify(body);}let res;try{res=await fetch(url,opt);}catch(e){return{netError:String(e)};}let json=null;try{json=await res.clone().json();}catch(_){/* non-JSON */}return{status:res.status,json,headers:res.headers};}
+const errShape=j=>j&&typeof j.code==="string"&&j.code.length>0&&("detail"in j)&&("action"in j);
+function row(n,name,result,detail){results.push({n,name,result,detail});const tb=$("tbl").tBodies[0];const tr=tb.insertRow();tr.innerHTML=`<td>${n}</td><td>${name}</td><td><span class="pill ${result}">${result}</span></td><td>${detail.replace(/</g,"&lt;")}<div class="d"></div></td>`;}
+function summary(){const p=results.filter(r=>r.result==="PASS").length,w=results.filter(r=>r.result==="WARN").length,f=results.filter(r=>r.result==="FAIL").length,s=results.filter(r=>r.result==="SKIP").length;$("score").textContent=`${p} pass · ${w} warn · ${f} fail${s?` · ${s} skipped`:""}`;$("export").disabled=false;}
+$("export").onclick=()=>{const blob=new Blob([JSON.stringify({ranAt:new Date().toISOString(),base:$("base").value,results},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="checker-results.json";a.click();};
+$("run").onclick=async()=>{
+  results=[];$("tbl").tBodies[0].innerHTML="";$("run").disabled=true;$("score").textContent="running…";
+  const V=$("verify").value,D=$("detail").value,M=$("missing").value,L=$("log").value,W=$("wpath").value.trim();
+  const purpose="Checker test case SBX-CASE-0001";
+  try{
+    let r=await call("GET","/healthz","none");
+    row(1,"Liveness /healthz (no auth)",r.netError?"FAIL":(r.status===200?"PASS":"FAIL"),r.netError?`Cannot reach service: ${r.netError}. Is it running? Is dev CORS on?`:`HTTP ${r.status}`);
+    if(r.netError){summary();$("run").disabled=false;return;}
+    r=await call("GET","/openapi.json","none");
+    const hasSpec=r.status===200&&r.json&&r.json.paths&&r.json.info;
+    row(2,"Contract live at /openapi.json",hasSpec?"PASS":"FAIL",hasSpec?`"${r.json.info.title}" · ${Object.keys(r.json.paths).length} paths`:`HTTP ${r.status} or not an OpenAPI document`);
+    r=await call("GET",V,"none");
+    row(3,"Rejects missing identity",( [400,401].includes(r.status))?(errShape(r.json)?"PASS":"WARN"):"FAIL",`HTTP ${r.status}${r.json&&r.json.code?` · code ${r.json.code}`:" · no {code,detail,action} body"}`);
+    r=await call("GET",V,"badkey");
+    row(4,"Rejects wrong key",(r.status===401||r.status===403)?(errShape(r.json)?"PASS":"WARN"):"FAIL",`HTTP ${r.status}${r.json&&r.json.code?` · ${r.json.code}`:""}`);
+    r=await call("GET",V,"partner");
+    if(r.status===200&&r.json){const keys=Object.keys(r.json).filter(k=>!["synthetic","found","valid","asOf"].includes(k));const lean=keys.length<=5;row(5,"Partner can verify (minimal fields)",lean?"PASS":"WARN",`HTTP 200 · fields: ${Object.keys(r.json).join(", ")}${lean?"":" — more than ~4 data fields; trim disclosure"}`);}else row(5,"Partner can verify (minimal fields)","FAIL",`HTTP ${r.status} — partner scope must reach the verify endpoint`);
+    const synOK1=r.json&&r.json.synthetic===true;
+    r=await call("GET",D,"partner",{"X-Purpose":purpose});
+    row(6,"Partner refused on full record",r.status===403?(errShape(r.json)?"PASS":"WARN"):"FAIL",`HTTP ${r.status}${r.json&&r.json.code?` · ${r.json.code} · action: ${r.json.action||"—"}`:""}`);
+    r=await call("GET",D,"internal");
+    row(7,"Purpose required for personal data",(r.status===400&&r.json&&/PURPOSE/i.test(r.json.code||""))?"PASS":((r.status>=400&&r.status<500)?"WARN":"FAIL"),`HTTP ${r.status}${r.json&&r.json.code?` · ${r.json.code}`:""}`);
+    r=await call("GET",D,"internal",{"X-Purpose":purpose});
+    const synOK2=r.json&&r.json.synthetic===true;
+    row(8,"Internal + purpose gets the record",r.status===200?"PASS":"FAIL",`HTTP ${r.status}`);
+    r=await call("GET",M,"internal",{"X-Purpose":purpose});
+    row(9,"Unknown record → 404 with code",(r.status===404&&errShape(r.json))?"PASS":(r.status===404?"WARN":"FAIL"),`HTTP ${r.status}${r.json&&r.json.code?` · ${r.json.code}`:" · error body missing {code,detail,action}"}`);
+    if(W){
+      let body;try{body=JSON.parse($("wbody").value);}catch(e){body=null;}
+      if(body===null){row(10,"Write asks for human confirmation","SKIP","Write body is not valid JSON");row(11,"Write is idempotent","SKIP","—");}
+      else{
+        r=await call("POST",W,"internal",{"Idempotency-Key":"chk-noconfirm-"+Date.now()},body);
+        row(10,"Write asks for human confirmation",(r.status===428||(r.status===400&&r.json&&/CONFIRM/i.test(r.json.code||"")))?"PASS":"FAIL",`HTTP ${r.status}${r.json&&r.json.code?` · ${r.json.code}`:""} (expected 428 CONFIRMATION_REQUIRED)`);
+        const ikey="chk-idem-"+Date.now();
+        const r1=await call("POST",W,"internal",{"Idempotency-Key":ikey,"X-Human-Confirmed":"true"},body);
+        const r2=await call("POST",W,"internal",{"Idempotency-Key":ikey,"X-Human-Confirmed":"true"},body);
+        const idOf=j=>{if(!j)return null;for(const k of Object.keys(j)){if(/(id|number|ref)$/i.test(k)&&typeof j[k]==="string")return j[k];}return JSON.stringify(j);};
+        const same=r1.status<400&&r2.status<400&&idOf(r1.json)!==null&&idOf(r1.json)===idOf(r2.json);
+        row(11,"Write is idempotent (same key → same result)",same?"PASS":"FAIL",`first HTTP ${r1.status} · replay HTTP ${r2.status} · ${same?`same reference ${idOf(r1.json)}`:"references differ or write failed"}`);
+      }
+    } else {row(10,"Write asks for human confirmation","SKIP","No write path configured");row(11,"Write is idempotent","SKIP","No write path configured");}
+    r=await call("GET",`${L}?subject=${encodeURIComponent($("subject").value)}`,"internal",{"X-Purpose":"Reviewing access to this record"});
+    const items=r.json&&(Array.isArray(r.json)?r.json:(r.json.items||r.json.entries||null));
+    if(r.status===200&&items&&items.length){
+      const hasPurpose=items.some(e=>e&&typeof e==="object"&&String(e.purpose||"").includes("SBX-CASE-0001"));
+      const hasDenied=items.some(e=>e&&[401,403].includes(Number(e.status)));
+      row(12,"Access log works per subject",hasPurpose?"PASS":"WARN",`${items.length} entries · ${hasPurpose?"stated purpose recorded":"did not find the purpose used in check #8 — is purpose stored?"}`);
+      row(13,"Refusals are logged too",hasDenied?"PASS":"WARN",hasDenied?"found a 401/403 entry":"no denied call found in the log — log before you refuse");
+    } else {row(12,"Access log works per subject","FAIL",`HTTP ${r.status} — expected 200 with entries (array or {items:[…]})`);row(13,"Refusals are logged too","FAIL","no log entries to inspect");}
+    const pL=await call("GET",`${L}?subject=${encodeURIComponent($("subject").value)}`,"partner");
+    row(14,"Access log is internal-only",(pL.status===403||pL.status===401)?"PASS":"WARN",`partner got HTTP ${pL.status}${pL.status===200?" — the log itself is sensitive; restrict it":""}`);
+    row(15,"Responses marked synthetic",(synOK1&&synOK2)?"PASS":"WARN",(synOK1&&synOK2)?`"synthetic": true on verify and detail`:`missing "synthetic": true on ${synOK1?"detail":"verify"}${(!synOK1&&!synOK2)?" and detail":""}`);
+  }catch(e){row(99,"Checker error","FAIL",String(e));}
+  summary();$("run").disabled=false;
+};
+</script>
+</body>
+</html>

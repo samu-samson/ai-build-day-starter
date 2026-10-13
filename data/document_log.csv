@@ -1,0 +1,41 @@
+controlNumber,docType,subject,classification,targetWorkingDays,receivedOn,fromOffice,currentHolder,status,confidential
+SBX-DOC-2026-0001,Travel Order,Synthetic subject no. 179,complex,7,2026-09-24,Supply and Property Unit,Supply and Property Unit,OPEN,
+SBX-DOC-2026-0002,Memorandum,Synthetic subject no. 129,highly_technical,20,2026-09-28,Records Section,Legal Unit,OPEN,
+SBX-DOC-2026-0003,Memorandum,Synthetic subject no. 910,simple,3,2026-09-17,Regional Coordination Unit,,CLOSED,
+SBX-DOC-2026-0004,Contract for review,Synthetic subject no. 472,highly_technical,20,2026-09-13,Planning Unit,,CLOSED,
+SBX-DOC-2026-0005,Travel Order,Synthetic subject no. 846,complex,7,2026-09-10,Human Resource Section,Accounting Section,OPEN,
+SBX-DOC-2026-0006,Letter request,Synthetic subject no. 939,complex,7,2026-10-11,Human Resource Section,Records Section,OPEN,
+SBX-DOC-2026-0007,Leave application,Synthetic subject no. 272,simple,3,2026-09-10,Human Resource Section,Supply and Property Unit,OPEN,yes
+SBX-DOC-2026-0008,Leave application,Synthetic subject no. 659,simple,3,2026-10-03,Office of the Director,Budget Section,OPEN,
+SBX-DOC-2026-0009,Purchase Request,Synthetic subject no. 576,simple,3,2026-09-12,Planning Unit,,CLOSED,yes
+SBX-DOC-2026-0010,Disbursement Voucher,Synthetic subject no. 582,complex,7,2026-10-05,Office of the Director,Supply and Property Unit,OPEN,
+SBX-DOC-2026-0011,Disbursement Voucher,Synthetic subject no. 267,simple,3,2026-09-22,Supply and Property Unit,Cash Section,OPEN,
+SBX-DOC-2026-0012,Travel Order,Synthetic subject no. 346,simple,3,2026-09-17,Finance Division,Legal Unit,OPEN,yes
+SBX-DOC-2026-0013,Inspection and Acceptance Report,Synthetic subject no. 838,complex,7,2026-10-01,Cash Section,Supply and Property Unit,OPEN,
+SBX-DOC-2026-0014,Leave application,Synthetic subject no. 193,complex,7,2026-10-01,Finance Division,,CLOSED,yes
+SBX-DOC-2026-0015,Travel Order,Synthetic subject no. 217,simple,3,2026-10-07,Human Resource Section,Office of the Director,OPEN,
+SBX-DOC-2026-0016,Disbursement Voucher,Synthetic subject no. 660,complex,7,2026-09-17,Human Resource Section,Accounting Section,OPEN,yes
+SBX-DOC-2026-0017,Inspection and Acceptance Report,Synthetic subject no. 109,complex,7,2026-09-27,Records Section,Cash Section,OPEN,yes
+SBX-DOC-2026-0018,Travel Order,Synthetic subject no. 210,complex,7,2026-09-27,Technical Services Division,,CLOSED,
+SBX-DOC-2026-0019,Inspection and Acceptance Report,Synthetic subject no. 723,complex,7,2026-09-30,Planning Unit,,CLOSED,yes
+SBX-DOC-2026-0020,Leave application,Synthetic subject no. 579,simple,3,2026-09-24,Accounting Section,Cash Section,OPEN,yes
+SBX-DOC-2026-0021,Letter request,Synthetic subject no. 138,complex,7,2026-09-11,Administrative Division,Office of the Director,OPEN,yes
+SBX-DOC-2026-0022,Purchase Request,Synthetic subject no. 495,simple,3,2026-10-10,Technical Services Division,,CLOSED,yes
+SBX-DOC-2026-0023,Disbursement Voucher,Synthetic subject no. 256,complex,7,2026-09-15,Accounting Section,,CLOSED,
+SBX-DOC-2026-0024,Travel Order,Synthetic subject no. 647,simple,3,2026-10-08,Regional Coordination Unit,Legal Unit,OPEN,
+SBX-DOC-2026-0025,Purchase Request,Synthetic subject no. 850,simple,3,2026-10-12,Regional Coordination Unit,,CLOSED,
+SBX-DOC-2026-0026,Memorandum,Synthetic subject no. 429,highly_technical,20,2026-10-05,Legal Unit,,CLOSED,
+SBX-DOC-2026-0027,Contract for review,Synthetic subject no. 528,highly_technical,20,2026-09-29,Office of the Director,Legal Unit,OPEN,
+SBX-DOC-2026-0028,Purchase Request,Synthetic subject no. 702,simple,3,2026-10-03,Records Section,Human Resource Section,OPEN,yes
+SBX-DOC-2026-0029,Memorandum,Synthetic subject no. 493,complex,7,2026-09-14,Legal Unit,,CLOSED,
+SBX-DOC-2026-0030,Memorandum,Synthetic subject no. 981,complex,7,2026-09-15,Supply and Property Unit,Budget Section,OPEN,
+SBX-DOC-2026-0031,Travel Order,Synthetic subject no. 643,simple,3,2026-09-17,Administrative Division,Records Section,OPEN,yes
+SBX-DOC-2026-0032,Travel Order,Synthetic subject no. 568,complex,7,2026-10-01,Cash Section,,CLOSED,
+SBX-DOC-2026-0033,Memorandum,Synthetic subject no. 301,simple,3,2026-09-18,Office of the Director,Legal Unit,OPEN,
+SBX-DOC-2026-0034,Purchase Request,Synthetic subject no. 361,highly_technical,20,2026-10-04,Human Resource Section,Cash Section,OPEN,
+SBX-DOC-2026-0035,Disbursement Voucher,Synthetic subject no. 464,simple,3,2026-10-07,Legal Unit,,CLOSED,
+SBX-DOC-2026-0036,Disbursement Voucher,Synthetic subject no. 398,complex,7,2026-10-12,Administrative Division,,CLOSED,
+SBX-DOC-2026-0037,Disbursement Voucher,Synthetic subject no. 393,complex,7,2026-10-10,ICT Unit,Cash Section,OPEN,yes
+SBX-DOC-2026-0038,Travel Order,Synthetic subject no. 660,simple,3,2026-09-14,Planning Unit,Cash Section,OPEN,yes
+SBX-DOC-2026-0039,Disbursement Voucher,Synthetic subject no. 654,complex,7,2026-09-10,Accounting Section,,CLOSED,
+SBX-DOC-2026-0040,Memorandum,Synthetic subject no. 132,complex,7,2026-09-19,Office of the Director,Human Resource Section,OPEN,

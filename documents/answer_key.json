@@ -1,0 +1,93 @@
+{
+  "leave_application_SBX-LA-2026-0001.pdf": {
+    "documentType": "leave_application",
+    "documentNo": "SBX-LA-2026-0001",
+    "employeeNo": "SBX-0007",
+    "employeeName": "Jasmine R. Navarro",
+    "leaveType": "Vacation leave",
+    "startDate": "2026-11-09",
+    "endDate": "2026-11-11",
+    "workingDays": 3,
+    "ocrRequired": false
+  },
+  "travel_order_SBX-TO-2026-0003.pdf": {
+    "documentType": "travel_order",
+    "documentNo": "SBX-TO-2026-0003",
+    "employeeNo": "SBX-0034",
+    "employeeName": "Lourdes B. Tolentino",
+    "destination": "Cebu City",
+    "startDate": "2026-11-17",
+    "endDate": "2026-11-19",
+    "ocrRequired": false
+  },
+  "purchase_request_SBX-PR-2026-0004.pdf": {
+    "documentType": "purchase_request",
+    "documentNo": "SBX-PR-2026-0004",
+    "requestingUnit": "ICT Unit",
+    "lineItems": 4,
+    "totalAmount": 13350.0,
+    "ocrRequired": false
+  },
+  "disbursement_voucher_SBX-DV-2026-0005.pdf": {
+    "documentType": "disbursement_voucher",
+    "documentNo": "SBX-DV-2026-0005",
+    "payee": "Sinag Postharvest Equipment Fabricators",
+    "amount": 148500.0,
+    "orsNo": "SBX-ORS-2026-0457",
+    "ocrRequired": false
+  },
+  "memo_SBX-MEMO-2026-0006.pdf": {
+    "documentType": "memorandum",
+    "documentNo": "SBX-MEMO-2026-0006",
+    "to": "All Division Chiefs",
+    "subject": "Submission of year-end property inventory reports",
+    "deadline": "2026-11-14",
+    "ocrRequired": false
+  },
+  "coe_request_SBX-COE-2026-0007.pdf": {
+    "documentType": "coe_request",
+    "documentNo": "SBX-COE-2026-0007",
+    "employeeNo": "SBX-0021",
+    "employeeName": "Paolo S. Mercado",
+    "purpose": "Bank loan application",
+    "copies": 2,
+    "ocrRequired": false
+  },
+  "ict_service_request_SBX-TKT-2026-0008.pdf": {
+    "documentType": "ict_service_request",
+    "documentNo": "SBX-TKT-2026-0008",
+    "requesterNo": "SBX-0007",
+    "category": "SYSTEM_ACCESS",
+    "propertyNo": "SBX-PROP-0012",
+    "ocrRequired": false
+  },
+  "registry_renewal_SBX-RR-2026-0010.pdf": {
+    "documentType": "registry_renewal",
+    "documentNo": "SBX-RR-2026-0010",
+    "registryNo": "SBX-REG-0015",
+    "entityName": "Silangan UV Express Transport Cooperative",
+    "requestedValidity": "2027-09-30",
+    "ocrRequired": false
+  },
+  "leave_application_SBX-LA-2026-0002_scanned.pdf": {
+    "documentType": "leave_application",
+    "documentNo": "SBX-LA-2026-0002",
+    "employeeNo": "SBX-0034",
+    "employeeName": "Lourdes B. Tolentino",
+    "leaveType": "Sick leave",
+    "startDate": "2026-10-01",
+    "endDate": "2026-10-02",
+    "workingDays": 2,
+    "ocrRequired": true
+  },
+  "travel_order_SBX-TO-2026-0009_scanned.pdf": {
+    "documentType": "travel_order",
+    "documentNo": "SBX-TO-2026-0009",
+    "employeeNo": "SBX-0021",
+    "employeeName": "Paolo S. Mercado",
+    "destination": "Baguio City",
+    "startDate": "2026-11-24",
+    "endDate": "2026-11-26",
+    "ocrRequired": true
+  }
+}
